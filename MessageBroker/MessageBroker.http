@@ -1,6 +1,17 @@
 @MessageBroker_HostAddress = http://localhost:5254
 
-GET {{MessageBroker_HostAddress}}/weatherforecast/
+GET {{MessageBroker_HostAddress}}/api/topics/
 Accept: application/json
+
+
+###
+POST {{MessageBroker_HostAddress}}/api/topics/
+Accept: application/json
+Content-Type: application/json
+
+{
+    
+    "name": "topic_3"
+} 
 
 ###

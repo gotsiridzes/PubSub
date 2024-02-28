@@ -1,10 +1,14 @@
+using MessageBroker.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(ops =>
+{
+	ops.UseSqlite(builder.Configuration.GetConnectionString("MessageBus"));
+});
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 
 var summaries = new[]
 {
@@ -19,7 +23,7 @@ app.MapGet("/weatherforecast", () =>
 			DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
 			Random.Shared.Next(-20, 55),
 			summaries[Random.Shared.Next(summaries.Length)]
-		))
+		))	
 		.ToArray();
 	return forecast;
 });

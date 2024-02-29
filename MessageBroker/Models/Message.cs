@@ -13,6 +13,8 @@ public class Message
 	[Required]
 	public DateTime ExpiresAfter { get; set; } = DateTime.Now.AddDays(1);
 
-	[Required] 
+	[Required]
 	public string MessageStatus { get; set; } = "NEW";
+
+	public int SubscriptionId { get; set; }
 }

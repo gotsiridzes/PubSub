@@ -13,29 +13,29 @@ Content-Type: application/json
 
 {
     
-    "name": "topic_3"
+    "name": "news_feed"
 } 
 
 ###
 
 // publish message
-POST {{MessageBroker_HostAddress}}/api/topics/1/messages
+POST {{MessageBroker_HostAddress}}/api/topics/6/messages
 Accept: application/json
 Content-Type: application/json
 
 {
-   "topicMessage": "MESSAGE FOR TOPIC 1"
+   "topicMessage": "new message"
 } 
 
 ###
 
 // Create subscription
-POST {{MessageBroker_HostAddress}}/api/topics/1/subscriptions
+POST {{MessageBroker_HostAddress}}/api/topics/6/subscriptions
 Accept: application/json
 Content-Type: application/json
 
 {
-   "name": "warehouse"
+   "name": "console app"
 }
 
 ###

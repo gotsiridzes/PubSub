@@ -113,9 +113,7 @@ app.MapPost("api/subscriptions/{subId}/messages",
 			return Results.NotFound($"Subscription with id `{subId}` not found");
 
 		if (!messageConfirmations.Any())
-		{
 			return Results.BadRequest();
-		}
 
 		var count = 0;
 

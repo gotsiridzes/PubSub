@@ -43,3 +43,12 @@ Content-Type: application/json
 // Get subscriber messages
 GET {{MessageBroker_HostAddress}}/api/subscriptions/1/messages
 Accept: application/json
+
+###
+
+// Acknowledge subscriber messages
+POST {{MessageBroker_HostAddress}}/api/subscriptions/1/messages
+Accept: application/json
+Content-Type: application/json
+
+[10, 11, 12]

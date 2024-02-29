@@ -82,6 +82,7 @@ app.MapPost("api/topics/{topicId}/subscriptions", async (AppDbContext dbContext,
 	return Results.Created($"api/topics/{topicId}/subscriptions/sub/{sub.Id}", sub);
 });
 
+// Get messages for subscription
 app.MapGet("api/subscriptions/{subId}/messages", async (AppDbContext dbContext, int subId) =>
 {
 	bool subs = await dbContext.Subscriptions.AnyAsync(s => s.Id.Equals(subId));
@@ -101,5 +102,37 @@ app.MapGet("api/subscriptions/{subId}/messages", async (AppDbContext dbContext, 
 
 	return Results.Ok(messages);
 });
+
+// Ack messages for subscriber
+app.MapPost("api/subscriptions/{subId}/messages",
+	async (AppDbContext dbContext, int subId, int[] messageConfirmations) =>
+	{
+		bool subs = await dbContext.Subscriptions.AnyAsync(s => s.Id.Equals(subId));
+
+		if (!subs)
+			return Results.NotFound($"Subscription with id `{subId}` not found");
+
+		if (!messageConfirmations.Any())
+		{
+			return Results.BadRequest();
+		}
+
+		var count = 0;
+
+		foreach (var messageId in messageConfirmations)
+		{
+			var msg = dbContext.Messages.FirstOrDefault(m => m.Id.Equals(messageId));
+
+			if (msg != null)
+			{
+				msg.MessageStatus = "SENT";
+				count++;
+			} 
+		}
+
+		await dbContext.SaveChangesAsync();
+
+		return Results.Ok($"Acknowledged {count}/{messageConfirmations.Length} messages");
+	});
 
 app.Run();

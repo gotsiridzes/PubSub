@@ -1,10 +1,12 @@
 @MessageBroker_HostAddress = http://localhost:5254
 
+// List topics
 GET {{MessageBroker_HostAddress}}/api/topics/
 Accept: application/json
 
 ###
 
+// Create topic
 POST {{MessageBroker_HostAddress}}/api/topics/
 Accept: application/json
 Content-Type: application/json
@@ -16,10 +18,28 @@ Content-Type: application/json
 
 ###
 
-POST {{MessageBroker_HostAddress}}/api/topics/13/messages
+// publish message
+POST {{MessageBroker_HostAddress}}/api/topics/1/messages
 Accept: application/json
 Content-Type: application/json
 
 {
-   "topicMessage": "the body of message"
+   "topicMessage": "MESSAGE FOR TOPIC 1"
 } 
+
+###
+
+// Create subscription
+POST {{MessageBroker_HostAddress}}/api/topics/1/subscriptions
+Accept: application/json
+Content-Type: application/json
+
+{
+   "name": "warehouse"
+}
+
+###
+
+// Get subscriber messages
+GET {{MessageBroker_HostAddress}}/api/subscriptions/1/messages
+Accept: application/json

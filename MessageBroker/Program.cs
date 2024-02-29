@@ -31,14 +31,14 @@ app.MapGet("api/topics", async (AppDbContext dbContext) =>
 });
 
 // Publish message
-app.MapPost("/api/topics/{id}/messages", async (AppDbContext dbContext, int id, Message message) =>
+app.MapPost("/api/topics/{topicId}/messages", async (AppDbContext dbContext, int topicId, Message message) =>
 {
-	var topics = await dbContext.Topics.AnyAsync(t => t.Id.Equals(id));
+	var topics = await dbContext.Topics.AnyAsync(t => t.Id.Equals(topicId));
 
 	if (!topics)
-		return Results.NotFound($"Topic with id `{id}` not found");
+		return Results.NotFound($"Topic with id `{topicId}` not found");
 
-	var subs = await dbContext.Subscriptions.Where(s => s.TopicId.Equals(id)).ToListAsync();
+	var subs = await dbContext.Subscriptions.Where(s => s.TopicId.Equals(topicId)).ToListAsync();
 
 	if (subs.Count == 0)
 		return Results.NotFound("There are no subscriptions for this topic");
@@ -63,6 +63,43 @@ app.MapPost("/api/topics/{id}/messages", async (AppDbContext dbContext, int id, 
 	await dbContext.SaveChangesAsync();
 
 	return Results.Ok("Message has been published");
+});
+
+
+// Create subscription
+app.MapPost("api/topics/{topicId}/subscriptions", async (AppDbContext dbContext, int topicId, Subscription sub) =>
+{
+	var topics = await dbContext.Topics.AnyAsync(t => t.Id.Equals(topicId));
+
+	if (!topics)
+		return Results.NotFound($"Topic with id `{topicId}` not found");
+
+	sub.TopicId = topicId;
+
+	await dbContext.Subscriptions.AddAsync(sub);
+	await dbContext.SaveChangesAsync();
+	
+	return Results.Created($"api/topics/{topicId}/subscriptions/sub/{sub.Id}", sub);
+});
+
+app.MapGet("api/subscriptions/{subId}/messages", async (AppDbContext dbContext, int subId) =>
+{
+	bool subs = await dbContext.Subscriptions.AnyAsync(s => s.Id.Equals(subId));
+
+	if (!subs)
+		return Results.NotFound($"Subscription with id `{subId}` not found");
+
+	var messages = dbContext.Messages.Where(m => m.SubscriptionId.Equals(subId) && m.MessageStatus != "SENT");
+
+	if (!messages.Any())
+		return Results.NotFound("No new messages");
+
+	messages.ToList()
+			.ForEach(m => m.MessageStatus = "REQUESTED");
+
+	await dbContext.SaveChangesAsync();
+
+	return Results.Ok(messages);
 });
 
 app.Run();

@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /MessageBroker/MessageBus.db
 /MessageBroker/MessageBus.db-wal
+/MessageBroker/MessageBus.db-shm

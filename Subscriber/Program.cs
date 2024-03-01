@@ -19,10 +19,7 @@ do
 
 		Thread.Sleep(2000);
 
-		if (ackIds.Any())
-		{
-			await AckMessagesAsync(client, ackIds);
-		}
+		if (ackIds.Any()) await AckMessagesAsync(client, ackIds);
 	}
 
 } while (Console.ReadKey().Key != ConsoleKey.Escape);
@@ -35,17 +32,19 @@ static async Task<List<int>> GetMessagesAsync(HttpClient client)
 	try
 	{
 		newMessages = await client.GetFromJsonAsync<List<MessageReadDto>>("api/subscriptions/5/messages");
+
+		newMessages!.ForEach(nm =>
+		{
+			Console.WriteLine($"{nm.Id} - {nm.TopicMessage} - {nm.MessageStatus}");
+			ackIds.Add(nm.Id);
+		});
+
+		
 	}
 	catch
 	{
-		return ackIds;
+		// ignored
 	}
-
-	newMessages!.ForEach(nm =>
-	{
-		Console.WriteLine($"{nm.Id} - {nm.TopicMessage} - {nm.MessageStatus}");
-		ackIds.Add(nm.Id);
-	});
 
 	return ackIds;
 }

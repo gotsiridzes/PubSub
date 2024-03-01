@@ -38,8 +38,6 @@ static async Task<List<int>> GetMessagesAsync(HttpClient client)
 			Console.WriteLine($"{nm.Id} - {nm.TopicMessage} - {nm.MessageStatus}");
 			ackIds.Add(nm.Id);
 		});
-
-		
 	}
 	catch
 	{

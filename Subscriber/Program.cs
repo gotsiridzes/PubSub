@@ -26,11 +26,10 @@ do
 static async Task<List<int>> GetMessagesAsync(HttpClient client)
 {
 	var ackIds = new List<int>();
-	var newMessages = new List<MessageReadDto>();
 
 	try
 	{
-		newMessages = await client.GetFromJsonAsync<List<MessageReadDto>>("api/subscriptions/5/messages");
+		var newMessages = await client.GetFromJsonAsync<List<MessageReadDto>>("api/subscriptions/5/messages");
 
 		newMessages!.ForEach(nm =>
 		{

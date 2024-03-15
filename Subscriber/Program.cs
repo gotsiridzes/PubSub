@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using System.Threading.Channels;
 using Subscriber.Dtos;
 
 Console.WriteLine("Press ESC to stop");

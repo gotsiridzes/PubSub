@@ -11,8 +11,8 @@
     <None Remove="MessageBus.db-shm" />
     <None Remove="MessageBus.db-wal" />
   </ItemGroup>
-
-  <ItemGroup>
+  
+	<ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
